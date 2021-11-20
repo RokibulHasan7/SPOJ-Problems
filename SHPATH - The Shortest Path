@@ -1,0 +1,74 @@
+#include <bits/stdc++.h>
+using namespace std;
+const long long INF = 1e18;
+vector<pair<int,long long> >adj_list[10005];
+long long dist[10005];
+
+void dijkstra(int s,int t){
+    priority_queue< pair<int, int>, vector< pair<int, int> >, greater< pair<int, int> > >pq;
+    int src = s;
+    pq.push({0, src});
+    dist[src] = 0;
+    while (!pq.empty()){
+        int node = pq.top().second;
+        if(node==t){
+            break;
+        }
+        pq.pop();
+        for (auto i:adj_list[node]){
+            int v = i.first;
+            int w = i.second;
+            if (dist[v] > dist[node] + w){
+                dist[v] = dist[node] + w;
+                pq.push({dist[v], v});
+            }
+        }
+    }
+}
+
+void ex(){
+    for(int i=0;i<10001;i++){
+        adj_list[i].clear();
+    }
+}
+
+int main()
+{
+    ios::sync_with_stdio(false);
+    int t;
+    cin>>t;
+    while(t--){
+        int n;
+        cin>>n;
+        map<string,int>mp;
+        for(int i=1;i<=n;i++){
+            string s;
+            cin>>s;
+            mp[s]=i;
+            int m;
+            cin>>m;
+            for(int j=0;j<m;j++){
+                int x;
+                long long w;
+                cin>>x>>w;
+                adj_list[i].push_back({x,w});
+                adj_list[x].push_back({i,w});
+            }
+        }
+        int q;
+        cin>>q;
+        for(int i=0;i<q;i++){
+            fill(dist , dist+n+1 , INF);
+            string s,t;
+            cin>>s>>t;
+            int src=mp[s];
+            int dest=mp[t];
+            dijkstra(src,dest);
+            cout<<dist[dest]<<endl;
+        }
+        //string blank;
+        //getline(cin, blank);
+        ex();
+    }
+    return 0;
+}

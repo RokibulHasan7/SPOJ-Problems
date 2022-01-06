@@ -1,0 +1,77 @@
+    #include <bits/stdc++.h>
+    #include <stdio.h>
+    #define MX 200005
+    using namespace std;
+    struct info{
+        int idx,l,r;
+    }Q[MX];
+    int block=174;
+    int a[30005];
+    int ans[MX];
+    int dis=0;
+    int mapp[1000005];
+    void add(int n){
+        mapp[a[n]]++;
+        if(mapp[a[n]]==1){
+            dis++;
+        }
+    }
+    void remove(int n){
+        mapp[a[n]]--;
+        if(mapp[a[n]]==0){
+            dis--;
+        }
+    }
+    bool comp(info a,info b){
+        if((a.l/block)!=(b.l/block)){
+            return (a.l/block)<(b.l/block);
+        }
+        else{
+            return a.r<b.r;
+        }
+    }
+    int main()
+    {
+        int n;
+        scanf("%d",&n);
+        for(int i=0;i<n;i++){
+            scanf("%d",&a[i]);
+        }
+        int q;
+        scanf("%d",&q);
+        for(int i=0;i<q;i++){
+            int u,v;
+            scanf("%d%d",&u,&v);
+            u-=1;v-=1;
+            Q[i].idx=i;
+            Q[i].l=u;
+            Q[i].r=v;
+        }
+        sort(Q,Q+q,comp);
+        int curl=0,curr=0;
+        for(int i=0;i<q;i++){
+            int finl=Q[i].l;
+            int finr=Q[i].r;
+            while(curl<finl){
+                remove(curl);
+                curl++;
+            }
+            while(curl>finl){
+                add(curl-1);
+                curl--;
+            }
+            while(curr<=finr){
+                add(curr);
+                curr++;
+            }
+            while(curr>(finr+1)){
+                remove(curr-1);
+                curr--;
+            }
+            ans[Q[i].idx]=dis;
+        }
+        for(int i=0;i<q;i++){
+            printf("%d\n",ans[i]);
+        }
+    }
+     

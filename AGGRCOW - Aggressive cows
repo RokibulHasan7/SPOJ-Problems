@@ -1,0 +1,50 @@
+    #include <bits/stdc++.h>
+    #define Fast ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+    using namespace std;
+    vector<long long>v;
+    bool check(int mid,int c){
+        int x=1;
+        int prev=v[0];
+        int n=v.size();
+        for(int i=1;i<n;i++){
+            if(v[i]-prev>=mid){
+                x++;
+                if(x==c){
+                    return true;
+                }
+                prev=v[i];
+            }
+        }
+        return false;
+    }
+    int main(){
+        Fast;
+        int t;
+        cin>>t;
+        while(t--){
+            int n,m;
+            cin>>n>>m;
+            v.clear();
+            for(int i=0;i<n;i++){
+                int x;
+                cin>>x;
+                v.push_back(x);
+            }
+            sort(v.begin(),v.end());
+            long long high=v[n-1];
+            long long low=0;
+            long long ans=-1;
+            while(high>low){
+                long long mid=(high+low)/2;
+                if(check(mid,m)){
+                    ans=max(ans,mid);
+                    low=mid+1;
+                }
+                else{
+                    high=mid;
+                }
+            }
+            cout<<ans<<endl;
+        }
+    }
+     

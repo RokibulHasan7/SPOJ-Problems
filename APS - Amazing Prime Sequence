@@ -1,0 +1,46 @@
+    #include <bits/stdc++.h>
+    #define Fast ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+    using namespace std;
+    long long MX=10000005;
+    long long prime[10000005];
+    long long pre_cal[10000005];
+    void sieve(){
+        memset(prime,-1,sizeof(prime));
+        prime[0]=0;
+        prime[1]=1;
+        for(long long i=2; i<MX; i+=2){
+            prime[i]=2;
+        }
+        for(long long i=3; i<MX; i+=2){
+            if(prime[i]==-1){
+                prime[i]=i;
+                for(long long j=i*i; j<MX; j+=i){
+                    if(j<MX){
+                        if(prime[j]==-1){
+                            prime[j]=i;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    void pre_calculate(){
+        pre_cal[0]=0;
+        pre_cal[1]=0;
+        for(long long i=2; i<MX; i++){
+            pre_cal[i]+=(pre_cal[i-1]+prime[i]);
+        }
+    }
+    int main(){
+        Fast;
+        sieve();
+        pre_calculate();
+        int t;
+        cin>>t;
+        while(t--){
+            int n;
+            cin>>n;
+            cout<<pre_cal[n]<<endl;
+        }
+    }
+     

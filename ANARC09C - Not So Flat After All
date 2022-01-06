@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+#define Fast ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+#define ll long long
+#define endl "\n"
+#define MX 1000001
+using namespace std;
+vector<int>prime;
+int mark[MX];
+set<int>st;
+map<int,int>mp1,mp2;
+void sieve(){
+    for(int i=4;i<=MX;i+=2){
+        mark[i]=1;
+    }
+    for(int i=3;i*i<=MX;i+=2){
+        for(int j=i*i;j<=MX;j+=(i*2)){
+            mark[j]=1;
+        }
+    }
+    prime.push_back(2);
+    for(int i=3;i<=MX;i+=2){
+        if(mark[i]==0){
+            prime.push_back(i);
+        }
+    }
+}
+void factor1(int n){
+    for(int i=0; i<prime.size() && prime[i]*prime[i]<=n; i++){
+        if(n%prime[i]==0){
+            st.insert(prime[i]);
+            while(n%prime[i]==0){
+                n/=prime[i];
+                mp1[prime[i]]++;
+            }
+        }
+    }
+    if(n>1){
+        st.insert(n);
+        mp1[n]++;
+    }
+}
+void factor2(int n){
+    for(int i=0; i<prime.size() && prime[i]*prime[i]<=n; i++){
+        if(n%prime[i]==0){
+            st.insert(prime[i]);
+            while(n%prime[i]==0){
+                n/=prime[i];
+                mp2[prime[i]]++;
+            }
+        }
+    }
+    if(n>1){
+        st.insert(n);
+        mp2[n]++;
+    }
+ 
+}
+int main()
+{
+    sieve();
+    int i=1;
+    while(1){
+        int n,m;
+        cin>>n>>m;
+        if(n==0 && m==0){
+            return 0;
+        }
+        mp1.clear();mp2.clear();
+        st.clear();
+        set<int,int>:: iterator it;
+        if(n!=1){
+            factor1(n);
+        }
+        if(m!=1){
+            factor2(m);
+        }
+        int ans=0;
+        for(it=st.begin();it!=st.end();it++){
+            int x=*it;
+            int u=mp1[x];
+            int v=mp2[x];
+            ans+=abs(u-v);
+        }
+        cout<<i<<". "<<st.size()<<":"<<ans<<endl;
+        i++;
+    }
+ 
+}
+ 

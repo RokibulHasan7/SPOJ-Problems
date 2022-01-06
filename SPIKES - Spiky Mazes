@@ -1,0 +1,93 @@
+    #include <bits/stdc++.h>
+    using namespace std;
+     
+    const int MAXN = 1000;
+    const int INF  = 100000000;
+    const char SEP = '#';
+    map<pair<int, int>, int> vis;
+    int dx[] = {1,-1,0,0};
+    int dy[] = {0,0,1,-1};
+    int cc=0;
+    int h,w;
+    int temp;
+    string mapp[MAXN];
+    bool valid(int x,int y)
+    {
+        if( x>=0 && y>=0 && x<h && y<w)
+            return true;
+        return false;
+    }
+    bool possible=false;
+    void dfs(int x,int y,int z)
+    {
+        vis[{x,y}]=1;
+        for(int i = 0;i < 4; i++){
+    		int tempX = x+dx[i];
+    		int tempY = y+dy[i];
+    		if(valid(tempX, tempY) && vis[{tempX,tempY}]==0){
+    			if(mapp[tempX][tempY] == '.'){
+    				dfs(tempX, tempY, z);
+    				//vis[tempX][tempY] = 0;
+    			}
+    			if(mapp[tempX][tempY] == '@'){
+    				dfs(tempX, tempY, z);
+    				//vis[tempX][tempY] = 0;
+    			}
+    			if(mapp[tempX][tempY] == 's'){
+    				// cout << tempX << " " << tempY << endl;
+    				dfs(tempX, tempY, z-1);
+    				//vis[tempX][tempY] = 0;
+    			}
+    			if(mapp[tempX][tempY] == 'x'){
+                        //cout<<-1<<endl;
+    				if(z >= (temp+1)/2)
+    					possible = true;
+    				return;
+    			}
+    		}
+    	}
+    }
+    int main()
+    {
+        int l,r;
+        scanf("%d%d%d",&h,&w,&temp);
+     
+        for(int i=0; i<h ; i++)
+        {
+            cin>>mapp[i];
+        }
+        int ll,rr;
+        for(int i=0; i<h; i++)
+        {
+            for(int j=0; j<w; j++)
+            {
+                if(mapp[i][j]=='x')
+                {
+                    ll=i;
+                    rr=j;
+                }
+            }
+        }
+        for(int i=0; i<h; i++)
+        {
+            for(int j=0; j<w; j++)
+            {
+                if(mapp[i][j]=='@')
+                {
+                    l=i;
+                    r=j;
+                    vis.clear();
+                    possible=false;
+                    dfs(l,r,temp);
+                    ///possible=false;
+                    if(possible)
+                    {
+                        cout<<"SUCCESS"<<endl;
+                        return 0;
+                    }
+                }
+            }
+        }
+        cout<<"IMPOSSIBLE"<<endl;
+    }
+     

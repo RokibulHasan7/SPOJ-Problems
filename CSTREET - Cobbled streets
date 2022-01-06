@@ -1,0 +1,63 @@
+    #include <bits/stdc++.h>
+    #define Fast ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+    #define ll long long
+    using namespace std;
+    struct edge{
+        int u, v;
+        ll w;
+        bool operator<(const edge& p) const{
+            return w < p.w;
+        }
+    };
+    int pr[200005];
+    vector<edge> edges;
+    int find(int r){
+        if(r==pr[r]){
+            return r;
+        }
+        return pr[r]=find(pr[r]);
+    }
+    ll mst(int n){
+        sort(edges.begin(), edges.end());
+        for (int i = 1; i <= n; i++){
+            pr[i] = i;
+        }
+        int count = 0;
+        ll sum = 0LL;
+        for (int i = 0; i < edges.size(); i++){
+            int u = find(edges[i].u);
+            int v = find(edges[i].v);
+            if (u != v){
+                pr[u] = v;
+                count++;
+                sum += edges[i].w;
+                if (count == n - 1)
+                    break;
+            }
+        }
+        return sum;
+    }
+    int main(){
+        Fast;
+        int t;
+        cin>>t;
+        while(t--){
+            edges.clear();
+            int n, m, p;
+            cin >> p>> n >> m;
+            for (int i = 1; i <= m; i++){
+                int u, v;
+                ll w;
+                cin >> u >> v >> w;
+                edge get;
+                get.u = u;
+                get.v = v;
+                get.w = w*p;
+                edges.push_back(get);
+            }
+            ll Ans=mst(n);
+            cout << Ans << endl;
+        }
+        return 0;
+    }
+     

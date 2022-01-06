@@ -1,0 +1,86 @@
+    #include <bits/stdc++.h>
+    using namespace std;
+    #define mx 100001
+    typedef pair<long long,long long> pp;
+    long long arr[mx];
+    pp tree[mx * 3];
+    void init(long long node, long long b, long long e)
+    {
+        if (b == e) {
+            tree[node] = pp(arr[b],b);
+            return;
+        }
+        long long Left = node * 2;
+        long long Right = node * 2 + 1;
+        long long mid = (b + e) / 2;
+        init(Left, b, mid);
+        init(Right, mid + 1, e);
+        tree[node] = max(tree[Left] , tree[Right]);
+    }
+    pp query(long long node, long long b, long long e, long long i, long long j)
+    {
+        if (i > e || j < b)
+            return pp(INT_MIN,INT_MIN); 
+        if (b >= i && e <= j)
+            return tree[node]; 
+        long long Left = node * 2; 
+        long long Right = node * 2 + 1;
+        long long mid = (b + e) / 2;
+        pp p1 = query(Left, b, mid, i, j);
+        pp p2 = query(Right, mid + 1, e, i, j);
+        return max(p1 , p2); 
+    }
+    void update(long long node, long long b, long long e, long long i, long long newvalue)
+    {
+        if (i > e || i < b)
+            return; 
+        if (b >= i && e <= i) { 
+            tree[node].first = newvalue;
+            arr[b]=newvalue;
+            return;
+        }
+        long long Left = node * 2; 
+        long long Right = node * 2 + 1;
+        long long mid = (b + e) / 2;
+        if(mid>=i){
+        update(Left, b, mid, i, newvalue);}
+        else{
+        update(Right, mid + 1, e, i, newvalue);}
+        tree[node] = max(tree[Left] , tree[Right]);
+    }
+    int main()
+    {
+        long long n;
+        scanf("%lld",&n);
+        for(long long i=1;i<=n;i++){
+            scanf("%lld",&arr[i]);
+        }
+        init(1, 1, n);
+        long long q;
+        scanf("%lld",&q);
+     
+        while(q--)
+        {
+            char c;
+            long long l,r;
+            cin>>c;
+            scanf("%lld%lld",&l,&r);
+            if(c=='Q'){
+                long long fmx= query(1,1,n,l,r).second;
+                long long smx1= INT_MIN, smx2= INT_MIN;
+     
+                if(fmx != l){
+                    smx1 = query(1,1,n, l, fmx-1).first;
+                }
+                if(fmx != r){
+                    smx2 = query(1,1,n, fmx+1, r).first;
+                }
+     
+                printf("%lld\n", arr[fmx] + max(smx1, smx2));
+            }
+            else{
+                update(1, 1, n, l, r);
+            }
+        }
+    }
+     
